@@ -1,0 +1,3 @@
+wage = get_wage(position)
+id, last_name, first_name, position, start_date
+

@@ -1,0 +1,4 @@
+schedule_id,employee_id,week_start_date,mon_hours,tue_hours,wed_hours,thu_hours,fri_hours,sat_hours,sun_hours,total_hours,total_pay
+SCH001,E001,2024-02-05,8,8,8,8,8,0,0,40,740.00
+SCH002,E002,2024-02-05,6,6,6,6,4,0,3,34,476.00
+SCH003,E001,2024-02-12,8,8,8,8,4,0,0,36,666.00
