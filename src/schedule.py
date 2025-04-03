@@ -87,7 +87,7 @@ class Schedule:
             sun_hours=float(schedule_data.get('sun_hours', 0))
         )
 
-        pass
+    pass
 
     def to_dict(self) -> Dict[str, Any]:
         """

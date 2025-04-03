@@ -1,2 +1,5 @@
-emp_id,name,role,wage
-<class 'employee.Employee'>,jeff jeff,baker,
+employee_id,first_name,last_name,position,start_date
+jd1743680206,jeff,dav,baker,2002-05-06
+df1743682240,dev,fer,baker,2002-04-04
+KH1743685910,Kevin,Hough,BIG MAN,2003-02-01
+kk1743686866,kek,kek,feck,2004-01-02
