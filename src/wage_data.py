@@ -158,7 +158,7 @@ def delete_position_rate(position: str) -> tuple[bool, str]:
 
     # Create file paths
     rates_file_path = Path("wage_rates.json")
-    employees_file_path = Path("employees.csv")
+    employees_file_path = Path("data/employees.csv")
 
     # Check if rates file exists
     if not rates_file_path.exists():

@@ -65,7 +65,7 @@ class DataManager:
             return True, ""
         except Exception as e:
             return False, str(e)
-        """
+    """
         Initialize the data directory and create empty data files if they don't exist.
 
         Returns:
@@ -73,32 +73,32 @@ class DataManager:
 
         Member 3 Name: Megan  Mallon 
         Student ID:   124444416
-        """
-        pass
+    """
+    pass
 
-    def load_employees(self) -> Tuple[bool, List[Dict[str, str]], str]:
+    def load_employees(self) -> tuple[bool, list[Any], str] | tuple[bool, list[dict[str, str | Any]], str] | None:
         try:
             employees = []
 
             if not self.employees_file.exists():
-                return True, employees, ""  # Return empty list if file doesn't exist
+                return True, employees, ""
 
             with open(self.employees_file, 'r', newline='') as f:
                 reader = csv.DictReader(f)
                 for row in reader:
                     employees.append({
-                        'employee_id': row['id'],
+                        'employee_id': row['employee_id'],
                         'first_name': row['first_name'],
                         'last_name': row['last_name'],
                         'position': row['position'],
-                        'start_date': row['start_date']
+                        'start_date': row.get('start_date', '')
                     })
 
             return True, employees, ""
         except Exception as e:
             return False, [], f"Error loading employees: {str(e)}"
 
-        """
+    """
         Load all employees from the employees CSV file.
 
         Returns:
@@ -106,8 +106,8 @@ class DataManager:
 
         Member 4 Name: Zsofia Aradi
         Student ID: 124437146
-        """
-        pass
+    """
+    pass
 
     def load_employee_by_id(self, employee_id: str) -> Tuple[bool, Optional[Dict[str, str]], str]:
         try:
@@ -122,7 +122,7 @@ class DataManager:
             return False, None, f"Employee {employee_id} not found"
         except Exception as e:
             return False, None, f"Error loading employee: {str(e)}"
-        """
+    """
         Load a specific employee by ID from the employees CSV file.
 
         Args:
@@ -133,31 +133,32 @@ class DataManager:
 
         Member 1 Name: Grace salmon anson
         Student ID: 124450632
-        """
-        pass
+    """
+    pass
 
-    def save_employee(self, employee: Employee) -> Tuple[bool, str]:
+    def save_employee(self, employee: Employee) -> tuple[bool, str]:
         try:
-            with open('employees.csv', mode='a', newline='') as file:
-                fieldnames = ["employee_id", "last_name", "first_name", "position", "start_date"]
-                writer = csv.DictWriter(file, fieldnames=fieldnames)
 
-                # If the file is empty, write the header
-                if file.tell() == 0:
-                    writer.writeheader()
+            fieldnames = ['id', 'last_name', 'first_name', 'position', 'start_date']
 
-                # Write the employee data
+            # Open file with proper type hints for type checking
+            with open(self.employees_file, mode='a', newline='', encoding='utf-8') as file:
+                # Create DictWriter with explicit fieldnames
+                writer = csv.DictWriter(file, fieldnames=fieldnames, dialect='excel')
+
+                # Write the employee data matching your CSV structure
                 writer.writerow({
-                    "employee_id": employee.employee_id,
-                    "last_name": employee.last_name,
-                    "first_name": employee.first_name,
-                    "position": employee.position,
-                    "start_date": employee.start_date
+                    'id': employee.employee_id,
+                    'last_name': employee.last_name,
+                    'first_name': employee.first_name,
+                    'position': employee.position,
+                    'start_date': employee.start_date
                 })
+
             return True, "Employee saved successfully."
         except Exception as e:
             return False, f"Error saving employee: {str(e)}"
-        """
+    """
         Save an employee to the employees CSV file.
 
         Args:
@@ -168,36 +169,46 @@ class DataManager:
 
         Member 2 Name: Abbie Akinkuolie
         Student ID: 124395016
-        """
-        pass
+    """
+    pass
 
-    def update_employee(self, employee: Employee) -> Tuple[bool, str]:
+    def update_employee(self, employee: Employee) -> tuple[bool, str]:
         try:
-            updated = False
-            rows = []
-            with open(self.file_path, 'r') as file:
-                reader = csv.reader(file)
-                for row in reader:
-                    if row[0] == str(employee.employee_id):
-                        rows.append([str(employee.employee_id), employee.name, employee.position, str(employee.salary)])
-                        updated = True
-                    else:
-                        rows.append(row)
+            # Read existing data
+            with open(self.employees_file, 'r', newline='') as file:
+                reader = csv.DictReader(file)
+                rows = list(reader)
 
-            if updated:
-                with open(self.file_path, 'w', newline='') as file:
-                    writer = csv.writer(file)
-                    writer.writerows(rows)
-                return True, ""
-            return False, "Employee not found"
+            # Find and update employee
+            updated = False
+            for row in rows:
+                if row['id'] == employee.employee_id:
+                    row['first_name'] = employee.first_name
+                    row['last_name'] = employee.last_name
+                    row['position'] = employee.position
+                    row['start_date'] = employee.start_date
+                    updated = True
+                    break
+
+            if not updated:
+                return False, "Employee not found"
+
+            # Write back all data
+            with open(self.employees_file, 'w', newline='') as file:
+                writer = csv.DictWriter(file, fieldnames=['id', 'last_name', 'first_name', 'position', 'start_date'])
+                writer.writeheader()
+                writer.writerows(rows)
+
+            return True, "Employee updated successfully"
         except Exception as e:
             return False, str(e)
 
-        employee_manager = EmployeeManager('employees.csv')
-        employee = Employee(1, 'John Doe', 'Manager', 55000)
-        status, message = employee_manager.update_employee(employee)
-        print(status, message)
-        """
+#SAVING CODE FOR FUTURE     REFERENCE
+# employee_manager = EmployeeManager('employees.csv')
+# employee = Employee(1, 'John', 'Doe', "55000", start_date="2004,01,02")
+# status, message = employee_manager.update_employee(employee)
+# print(status, message)
+    """
         Update an existing employee in the employees CSV file.
 
         Args:
@@ -208,8 +219,8 @@ class DataManager:
 
         Member 3 Name: Megan Mallon 
         Student ID:   124444416
-        """
-        pass
+    """
+    pass
 
     def delete_employee(self, employee_id: str) -> Tuple[bool, str]:
         try:
